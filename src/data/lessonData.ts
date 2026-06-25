@@ -1,3 +1,5 @@
+
+
 export const lessonData = [
     {
       day: 1, level: "A2", theme: "Daily Routines", themePortuguese: "Rotinas Diárias", emoji: "☀️",

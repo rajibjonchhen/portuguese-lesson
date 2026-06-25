@@ -1,10 +1,10 @@
 
 
 import { useState } from "react";
-import { lessonData } from "./data/lessonData";
-import { levelColors } from "./data/levelColor";
-import { PERSONS } from "./data/persons";
-import { TENSES } from "./data/tenses";
+import { lessonData } from "./data/lessonData.ts";
+import { levelColors } from "./data/levelColor.ts";
+import { PERSONS } from "./data/persons.ts";
+import { TENSES } from "./data/tenses.ts";
 
 
  
@@ -12,14 +12,16 @@ export default function PortugueseApp() {
   const [selectedDay, setSelectedDay] = useState(0);
   const [activeTab, setActiveTab] = useState("verbs");
   const [selectedVerb, setSelectedVerb] = useState(0);
-  const [tense, setTense] = useState("present");
-  const [showTranslation, setShowTranslation] = useState({});
+  type Tense = "present" | "past" | "future";
+  const [tense, setTense] = useState<Tense>("present");
+  const [showTranslation, setShowTranslation] = useState<Record<number, boolean>>({});
  
   const day = lessonData[selectedDay];
-  const colors = levelColors[day.level];
+  // const colors = levelColors[day.level];
+  const colors = levelColors[day.level as keyof typeof levelColors];
   const verb = day.verbs[selectedVerb];
  
-  const toggleTranslation = (i) => setShowTranslation(p => ({ ...p, [i]: !p[i] }));
+  const toggleTranslation = (i: number) => setShowTranslation(p => ({ ...p, [i]: !p[i] }));
  
   return (
     <div style={{ fontFamily:"'Georgia',serif", minHeight:"100vh", background:"#faf8f4", color:"#1a1a1a" }}>
@@ -37,8 +39,9 @@ export default function PortugueseApp() {
             <button key={i} onClick={() => { setSelectedDay(i); setSelectedVerb(0); setActiveTab("verbs"); setShowTranslation({}); }}
               style={{ padding:"7px 12px", border:"none", borderRadius:"7px 7px 0 0", cursor:"pointer", fontSize:11, fontWeight:700, whiteSpace:"nowrap",
                 background: selectedDay===i ? "#faf8f4" : "transparent",
-                color: selectedDay===i ? levelColors[d.level].accent : "#888",
-                borderBottom: selectedDay===i ? `3px solid ${levelColors[d.level].accent}` : "3px solid transparent" }}>
+                // color: selectedDay===i ? levelColors[d.level].accent : "#888",
+                color: selectedDay === i ? levelColors[d.level as keyof typeof levelColors].accent : "#888",
+                borderBottom: selectedDay===i ? `3px solid ${levelColors[d.level as keyof typeof levelColors].accent}` : "3px solid transparent"}}>
               Day {d.day} <span style={{ fontSize:9, opacity:.8 }}>· {d.level}</span>
             </button>
           ))}
@@ -122,7 +125,7 @@ export default function PortugueseApp() {
                       gridColumn: p.key==="nos" ? "1" : p.key==="eles" ? "2" : "auto" }}>
                       <div style={{ fontSize:10, color:"#777", fontWeight:700, textTransform:"uppercase", letterSpacing:.4, marginBottom:2 }}>{p.sub}</div>
                       <div style={{ fontSize:13, color:"#888", marginBottom:3 }}>{p.label}</div>
-                      <div style={{ fontSize:18, fontWeight:700, color:colors.accent }}>{verb.conjugations[tense][p.key]}</div>
+                      <div style={{ fontSize:18, fontWeight:700, color:colors.accent }}>{verb.conjugations[tense][p.key as 'eu' | 'tu' | 'ele' | 'nos' | 'eles']}</div>
                     </div>
                   ))}
                 </div>
@@ -155,9 +158,9 @@ export default function PortugueseApp() {
                             <div style={{ fontWeight:700, color:"#333", fontSize:12 }}>{p.label}</div>
                             <div style={{ fontSize:10, color:"#999" }}>{p.sub}</div>
                           </td>
-                          <td style={{ padding:"9px 10px", color:"#1a1a1a", fontWeight:600 }}>{verb.conjugations.present[p.key]}</td>
-                          <td style={{ padding:"9px 10px", color:"#1a1a1a", fontWeight:600 }}>{verb.conjugations.past[p.key]}</td>
-                          <td style={{ padding:"9px 10px", color:"#1a1a1a", fontWeight:600 }}>{verb.conjugations.future[p.key]}</td>
+                          <td style={{ padding:"9px 10px", color:"#1a1a1a", fontWeight:600 }}>{verb.conjugations.present[p.key as 'eu' | 'tu' | 'ele' | 'nos' | 'eles']}</td>
+                          <td style={{ padding:"9px 10px", color:"#1a1a1a", fontWeight:600 }}>{verb.conjugations.past[p.key as 'eu' | 'tu' | 'ele' | 'nos' | 'eles']}</td>
+                          <td style={{ padding:"9px 10px", color:"#1a1a1a", fontWeight:600 }}>{verb.conjugations.future[p.key as 'eu' | 'tu' | 'ele' | 'nos' | 'eles']}</td>
                         </tr>
                       ))}
                     </tbody>
